@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Background Gradient</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            transition: background 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Define corner colors
+        const colors = {
+            topLeft: [255, 0, 0], // red
+            topRight: [0, 0, 255], // blue
+            bottomLeft: [0, 255, 0], // green
+            bottomRight: [255, 255, 0] // yellow
+        };
+
+        document.addEventListener('mousemove', function(e) {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            // Bilinear interpolation
+            const tl = colors.topLeft;
+            const tr = colors.topRight;
+            const bl = colors.bottomLeft;
+            const br = colors.bottomRight;
+
+            const r = (1 - x) * (1 - y) * tl[0] + x * (1 - y) * tr[0] + (1 - x) * y * bl[0] + x * y * br[0];
+            const g = (1 - x) * (1 - y) * tl[1] + x * (1 - y) * tr[1] + (1 - x) * y * bl[1] + x * y * br[1];
+            const b = (1 - x) * (1 - y) * tl[2] + x * (1 - y) * tr[2] + (1 - x) * y * bl[2] + x * y * br[2];
+
+            document.body.style.backgroundColor = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+        });
+    </script>
+</body>
+</html>

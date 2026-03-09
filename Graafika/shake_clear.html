@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shake to Clear</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .element {
+            margin: 10px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            display: inline-block;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .cleared {
+            transform: translateY(100vh);
+            opacity: 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shake to Clear</h1>
+    <p>Move the mouse quickly left and right to clear the elements!</p>
+    <button class="element">Button 1</button>
+    <button class="element">Button 2</button>
+    <div class="element">Div 1</div>
+    <div class="element">Div 2</div>
+    <p class="element">Paragraph</p>
+    <script>
+        let lastX = 0;
+        let lastTime = 0;
+        let shakeCount = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastTime;
+            const deltaX = e.clientX - lastX;
+            const speed = Math.abs(deltaX) / deltaTime;
+
+            if (speed > 0.5 && deltaX * (e.clientX - lastX) < 0) { // direction change
+                shakeCount++;
+                if (shakeCount > 3) {
+                    clearElements();
+                    shakeCount = 0;
+                }
+            }
+
+            lastX = e.clientX;
+            lastTime = currentTime;
+        });
+
+        function clearElements() {
+            const elements = document.querySelectorAll('.element');
+            elements.forEach(el => {
+                el.classList.add('cleared');
+            });
+        }
+    </script>
+</body>
+</html>

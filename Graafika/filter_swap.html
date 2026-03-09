@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover Filter Swap</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        img {
+            max-width: 400px;
+            max-height: 300px;
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+            cursor: pointer;
+        }
+        img:hover {
+            filter: invert(100%) hue-rotate(180deg) saturate(2);
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Hover Filter Swap</h1>
+        <p>Hover over the image to see the filter change!</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1280px-Image_created_with_a_mobile_phone.png" alt="Image">
+    </div>
+</body>
+</html>

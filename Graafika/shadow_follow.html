@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Shadow Follow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            margin: 50px 0;
+            transition: text-shadow 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Shadow Follow</h1>
+    <h2>Where the mouse is, there is the sun</h2>
+    <h3>Shadows point away from the cursor</h3>
+    <script>
+        const headings = document.querySelectorAll('h1, h2, h3');
+
+        document.addEventListener('mousemove', (e) => {
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = centerX - e.clientX;
+                const dy = centerY - e.clientY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const shadowLength = Math.min(distance / 10, 20);
+                const shadowX = (dx / distance) * shadowLength;
+                const shadowY = (dy / distance) * shadowLength;
+                heading.style.textShadow = `${shadowX}px ${shadowY}px 5px rgba(0,0,0,0.5)`;
+            });
+        });
+    </script>
+</body>
+</html>

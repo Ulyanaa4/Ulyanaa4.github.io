@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll-Driven Scaling</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            transition: transform 0.1s ease;
+        }
+        .scale-element {
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="section" style="background-color: #ffcccc;">
+        <div class="scale-element">Scroll to see scaling!</div>
+    </div>
+    <div class="section" style="background-color: #ccffcc;">
+        <div class="scale-element">Keep scrolling...</div>
+    </div>
+    <div class="section" style="background-color: #ccccff;">
+        <div class="scale-element">Elements grow larger!</div>
+    </div>
+    <div class="section" style="background-color: #ffffcc;">
+        <div class="scale-element">Or shrink if you go back.</div>
+    </div>
+    <div class="section" style="background-color: #ffccff;">
+        <div class="scale-element">End of page.</div>
+    </div>
+    <script>
+        const elements = document.querySelectorAll('.scale-element');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const scale = 1 + scrollY / 1000; // grows as you scroll
+            elements.forEach(el => {
+                el.style.transform = `scale(${scale})`;
+            });
+        });
+    </script>
+</body>
+</html>

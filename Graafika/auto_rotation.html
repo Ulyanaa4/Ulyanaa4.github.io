@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Chaos Rotation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+        .element {
+            width: 100px;
+            height: 100px;
+            margin: 20px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            animation: rotate linear infinite;
+        }
+        .element:nth-child(1) { animation-duration: 5s; }
+        .element:nth-child(2) { animation-duration: 7s; }
+        .element:nth-child(3) { animation-duration: 9s; }
+        .element:nth-child(4) { animation-duration: 6s; }
+        .element:nth-child(5) { animation-duration: 8s; }
+        .element:nth-child(6) { animation-duration: 10s; }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="element">1</div>
+    <div class="element">2</div>
+    <div class="element">3</div>
+    <div class="element">4</div>
+    <div class="element">5</div>
+    <div class="element">6</div>
+</body>
+</html>

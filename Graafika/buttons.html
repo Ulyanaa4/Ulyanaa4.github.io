@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnetic Buttons</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .magnetic-button {
+            position: absolute;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <button class="magnetic-button" style="left: 100px; top: 100px;">Button 1</button>
+    <button class="magnetic-button" style="left: 300px; top: 200px;">Button 2</button>
+    <button class="magnetic-button" style="left: 500px; top: 150px;">Button 3</button>
+    <script>
+        const buttons = document.querySelectorAll('.magnetic-button');
+        buttons.forEach(button => {
+            const rect = button.getBoundingClientRect();
+            button.dataset.originalX = rect.left;
+            button.dataset.originalY = rect.top;
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            buttons.forEach(button => {
+                const rect = button.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = e.clientX - centerX;
+                const dy = e.clientY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const threshold = 100;
+                if (distance < threshold) {
+                    const pullStrength = 5; // pixels to move
+                    const moveX = (dx / distance) * pullStrength;
+                    const moveY = (dy / distance) * pullStrength;
+                    button.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                } else {
+                    button.style.transform = 'translate(0px, 0px)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

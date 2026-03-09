@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Edge Warp (Pac-Man Effect)</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background: #222;
+    }
+    #warp-object {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: #ffeb3b;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #fff700;
+      cursor: grab;
+      left: 50vw;
+      top: 50vh;
+      transform: translate(-50%, -50%);
+      transition: box-shadow 0.2s;
+    }
+    #warp-object.dragging {
+      box-shadow: 0 0 40px #fff700;
+    }
+  </style>
+</head>
+<body>
+  <div id="warp-object"></div>
+  <script>
+    const obj = document.getElementById('warp-object');
+    let dragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    obj.addEventListener('mousedown', (e) => {
+      dragging = true;
+      obj.classList.add('dragging');
+      offsetX = e.clientX - obj.offsetLeft;
+      offsetY = e.clientY - obj.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      let x = e.clientX - offsetX;
+      let y = e.clientY - offsetY;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // Edge warp logic
+      if (x < -obj.offsetWidth/2) x = w - obj.offsetWidth/2;
+      if (x > w - obj.offsetWidth/2) x = -obj.offsetWidth/2;
+      if (y < -obj.offsetHeight/2) y = h - obj.offsetHeight/2;
+      if (y > h - obj.offsetHeight/2) y = -obj.offsetHeight/2;
+      obj.style.left = x + 'px';
+      obj.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      dragging = false;
+      obj.classList.remove('dragging');
+    });
+  </script>
+</body>
+</html>

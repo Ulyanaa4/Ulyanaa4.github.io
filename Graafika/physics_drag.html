@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragging Physics</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+        }
+        .object {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            border-radius: 10px;
+        }
+        .object:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dragging Physics</h1>
+    <p>Drag the objects—they have inertia!</p>
+    <div class="object" style="left: 100px; top: 100px;">Drag Me 1</div>
+    <div class="object" style="left: 300px; top: 200px;">Drag Me 2</div>
+    <div class="object" style="left: 500px; top: 150px;">Drag Me 3</div>
+    <script>
+        const objects = document.querySelectorAll('.object');
+        objects.forEach(obj => {
+            let isDragging = false;
+            let targetX = parseFloat(obj.style.left);
+            let targetY = parseFloat(obj.style.top);
+            let currentX = targetX;
+            let currentY = targetY;
+
+            obj.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                obj.style.zIndex = 10;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    targetX = e.clientX - 50;
+                    targetY = e.clientY - 50;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                obj.style.zIndex = 1;
+            });
+
+            function animate() {
+                const easing = 0.1;
+                currentX += (targetX - currentX) * easing;
+                currentY += (targetY - currentY) * easing;
+                obj.style.left = currentX + 'px';
+                obj.style.top = currentY + 'px';
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
+    </script>
+</body>
+</html>

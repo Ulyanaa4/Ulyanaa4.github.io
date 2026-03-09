@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Splash</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #000;
+            cursor: crosshair;
+            overflow: hidden;
+        }
+        .splash {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: width 0.1s, height 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #fff; text-align: center; padding-top: 50px;">Click and hold to create color splashes!</h1>
+    <script>
+        let currentSplash = null;
+        let growing = false;
+        let size = 0;
+
+        document.addEventListener('mousedown', (e) => {
+            if (currentSplash) currentSplash.remove();
+            currentSplash = document.createElement('div');
+            currentSplash.className = 'splash';
+            currentSplash.style.left = e.clientX - 25 + 'px';
+            currentSplash.style.top = e.clientY - 25 + 'px';
+            currentSplash.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            document.body.appendChild(currentSplash);
+            size = 50;
+            growing = true;
+            grow();
+        });
+
+        document.addEventListener('mouseup', () => {
+            growing = false;
+        });
+
+        function grow() {
+            if (growing && currentSplash) {
+                size += 5;
+                currentSplash.style.width = size + 'px';
+                currentSplash.style.height = size + 'px';
+                currentSplash.style.left = parseFloat(currentSplash.style.left) - 2.5 + 'px';
+                currentSplash.style.top = parseFloat(currentSplash.style.top) - 2.5 + 'px';
+                setTimeout(grow, 50);
+            }
+        }
+    </script>
+</body>
+</html>

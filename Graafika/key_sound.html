@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key-Sound Piano</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        textarea {
+            width: 80%;
+            height: 200px;
+            background-color: #111;
+            color: #0f0;
+            border: 1px solid #0f0;
+            font-family: inherit;
+            font-size: 18px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Key-Sound Piano</h1>
+    <p>Type in the box below—each key press plays a random sound!</p>
+    <textarea id="textInput" placeholder="Start typing..."></textarea>
+    <script>
+        const input = document.getElementById('textInput');
+
+        input.addEventListener('keydown', (e) => {
+            playRandomSound();
+        });
+
+        function playRandomSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            const types = ['sine', 'square', 'sawtooth', 'triangle'];
+            oscillator.type = types[Math.floor(Math.random() * types.length)];
+            oscillator.frequency.setValueAtTime(200 + Math.random() * 800, audioContext.currentTime);
+
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+    </script>
+</body>
+</html>

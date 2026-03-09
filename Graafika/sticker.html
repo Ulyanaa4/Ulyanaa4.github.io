@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker Slap</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+            cursor: crosshair;
+            overflow: hidden;
+        }
+        .sticker {
+            position: absolute;
+            font-size: 50px;
+            pointer-events: none;
+            animation: pop 0.3s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; padding-top: 50px;">Click anywhere to slap stickers!</h1>
+    <script>
+        const stickers = ['😀', '🚀', '🌟', '💥', '🎉', '🔥', '⭐', '💯'];
+
+        document.addEventListener('click', (e) => {
+            const sticker = document.createElement('div');
+            sticker.className = 'sticker';
+            sticker.textContent = stickers[Math.floor(Math.random() * stickers.length)];
+            sticker.style.left = e.clientX - 25 + 'px';
+            sticker.style.top = e.clientY - 25 + 'px';
+            sticker.style.transform = `rotate(${Math.random() * 360}deg)`;
+            document.body.appendChild(sticker);
+        });
+    </script>
+</body>
+</html>

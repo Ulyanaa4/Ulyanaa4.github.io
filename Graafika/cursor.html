@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Cursor Shape</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+            cursor: none;
+            overflow: hidden;
+        }
+        #cursor {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; padding-top: 50px;">Move the mouse to see the custom cursor!</h1>
+    <div id="cursor"></div>
+    <script>
+        const cursor = document.getElementById('cursor');
+        let lastX = 0;
+        let lastY = 0;
+        let rotation = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 20 + 'px';
+            cursor.style.top = e.clientY - 20 + 'px';
+
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            if (dx !== 0 || dy !== 0) {
+                const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                rotation += 10; // or use angle
+                cursor.style.transform = `rotate(${rotation}deg)`;
+            }
+
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+    </script>
+</body>
+</html>
