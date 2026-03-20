@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #title {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-bottom: 2px solid #4a9eff;
+            transition: all 0.3s ease;
+        }
+
+        #title.success {
+            color: #4ade80;
+            text-shadow: 0 0 20px #4ade80;
+            font-size: 3em;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 100px);
+        }
+
+        .left-panel {
+            width: 200px;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-right: 1px solid #4a9eff;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .button {
+            padding: 12px 20px;
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #2e7dd4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .difficulty-section {
+            border: 1px solid #4a9eff;
+            border-radius: 5px;
+            padding: 12px;
+            background-color: #1a1a1a;
+        }
+
+        .difficulty-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #4a9eff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .difficulty-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .difficulty-btn {
+            padding: 10px;
+            background-color: #444;
+            color: #e0e0e0;
+            border: 2px solid #666;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .difficulty-btn:hover {
+            border-color: #4a9eff;
+            background-color: #555;
+        }
+
+        .difficulty-btn.active {
+            background-color: #4a9eff;
+            border-color: #4a9eff;
+            color: white;
+        }
+
+        .shape-section {
+            border: 1px solid #4a9eff;
+            border-radius: 5px;
+            padding: 12px;
+            background-color: #1a1a1a;
+            margin-top: 15px;
+        }
+
+        .shape-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #4a9eff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .shape-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .shape-btn {
+            padding: 10px;
+            background-color: #444;
+            color: #e0e0e0;
+            border: 2px solid #666;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .shape-btn:hover {
+            border-color: #4a9eff;
+            background-color: #555;
+        }
+
+        .shape-btn.active {
+            background-color: #4a9eff;
+            border-color: #4a9eff;
+            color: white;
+        }
+
+        .music-section {
+            position: absolute;
+            top: 370px;
+            right: 20px;
+            width: 360px;
+            border: 1px solid #4a9eff;
+            border-radius: 5px;
+            padding: 12px;
+            background-color: #1a1a1a;
+            margin-top: 15px;
+        }
+
+        .music-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #4a9eff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .music-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .music-btn {
+            padding: 10px;
+            background-color: #444;
+            color: #e0e0e0;
+            border: 2px solid #666;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .music-btn:hover {
+            border-color: #4a9eff;
+            background-color: #555;
+        }
+
+        .music-btn.active {
+            background-color: #4a9eff;
+            border-color: #4a9eff;
+            color: white;
+        }
+
+        .music-icon {
+            font-size: 1.1em;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .volume-control label {
+            font-size: 0.8em;
+            color: #888;
+            min-width: 30px;
+        }
+
+        .volume-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #444;
+            outline: none;
+            
+        }
+
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a9eff;
+            cursor: pointer;
+        }
+
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a9eff;
+            cursor: pointer;
+            border: none;
+        }
+            display:none
+        
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .assembly-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #2d2d2d;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4a9eff;
+        }
+
+        #assemblyField {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 5px;
+            background-color: #1a1a1a;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            min-height: 430px;
+        }
+
+        .puzzle-slot {
+            background-color: #0d0d0d;
+            border: 2px dashed #4a9eff;
+            border-radius: 4px;
+            cursor: grab;
+            position: relative;
+            min-height: 100px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .puzzle-slot:hover {
+            border-color: #2e7dd4;
+            background-color: #1a1a2a;
+        }
+
+        .puzzle-slot.drag-over {
+            background-color: #0d3a5a;
+            border-color: #4ade80;
+            box-shadow: inset 0 0 10px rgba(74, 173, 128, 0.3);
+        }
+
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            cursor: grab;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(74, 158, 255, 0.6);
+        }
+
+        .puzzle-piece[data-assembled="true"] {
+            opacity: 1;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .puzzle-piece.magnet-snap {
+            animation: magnetSnap 0.3s ease-out;
+        }
+
+        @keyframes magnetSnap {
+            0% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 16px rgba(74, 158, 255, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .puzzle-slot.magnet-active {
+            box-shadow: inset 0 0 20px rgba(74, 173, 128, 0.6);
+            background-color: #0d4a2a;
+        }
+
+        .image-section {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            background-color: #2d2d2d;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            padding: 150px;
+        }
+
+        #originalImage {
+            flex: 1;
+            background-color: #0d0d0d;
+            border: 1px solid #444;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            max-height: 430px;
+        }
+
+        #originalImage img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .storage-section {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background-color: #2d2d2d;
+            border-top: 2px solid #4a9eff;
+            padding: 15px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        #storage {
+            display: flex;
+            gap: 10px;
+            height: 120px;
+            align-items: center;
+        }
+
+        .empty-storage-message {
+            color: #888;
+            font-style: italic;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 160px;
+            right: 20px;
+            background-color: #2d2d2d;
+            border: 1px solid #4a9eff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #4a9eff;
+        }
+
+        .timer {
+            position: absolute;
+            bottom: 206px;
+            right: 20px;
+            background-color: #2d2d2d;
+            border: 1px solid #4a9eff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #4a9eff;
+        }
+
+        .leaderboard {
+            position: absolute;
+            top: 250px;
+            right: 20px;
+            width: 360px;
+            max-height: 230px;
+            overflow: auto;
+            background-color: #2d2d2d;
+            border: 1px solid #4a9eff;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 50;
+        }
+
+        .record-table {
+            position: absolute;
+            top: 120px;
+            right: 20px;
+            width: 360px;
+            background-color: #2d2d2d;
+            border: 1px solid #4ade80;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 51;
+        }
+
+        .record-table h3 {
+            color: #4ade80;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .record-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .record-table th,
+        .record-table td {
+            border-bottom: 1px solid #444;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .record-table th {
+            color: #9ef5c3;
+        }
+
+        .leaderboard h3 {
+            color: #4a9eff;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .leaderboard th,
+        .leaderboard td {
+            border-bottom: 1px solid #444;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .leaderboard th {
+            color: #9ec8ff;
+        }
+
+        .leaderboard .empty {
+            color: #888;
+            font-style: italic;
+            padding: 6px;
+        }
+
+        .camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .camera-modal.active {
+            display: flex;
+        }
+
+        .camera-modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background-color: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #4a9eff;
+        }
+
+        #cameraStream {
+            width: 400px;
+            height: 300px;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .camera-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .camera-btn {
+            padding: 12px 25px;
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .camera-btn:hover {
+            background-color: #2e7dd4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+        }
+
+        .camera-btn.cancel {
+            background-color: #666;
+        }
+
+        .camera-btn.cancel:hover {
+            background-color: #555;
+        }
+
+        #particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        @keyframes particle-float {
+            to {
+                transform: translate(var(--tx), var(--ty)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle.active {
+            animation: particle-float 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">Pixel Puzzle</div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="difficulty-section">
+                <div class="difficulty-title">Difficulty</div>
+                <div class="difficulty-group">
+                    <button class="difficulty-btn active" data-difficulty="3">Easy (3x3)</button>
+                    <button class="difficulty-btn" data-difficulty="5">Medium (5x5)</button>
+                    <button class="difficulty-btn" data-difficulty="10">Hard (10x10)</button>
+                </div>
+            </div>
+
+            <div class="shape-section">
+                <div class="shape-title">Shape</div>
+                <div class="shape-group">
+                    <button class="shape-btn active" data-shape="square">Squares</button>
+                    <button class="shape-btn" data-shape="triangle">Triangles</button>
+                    <button class="shape-btn" data-shape="random">Random Polygons</button>
+                </div>
+            </div>
+
+            <input type="file" id="uploadInput" accept="image/*">
+            <button class="button" id="uploadBtn">Upload Photo</button>
+            <button class="button" id="cameraBtn">Camera</button>
+            <button class="button" id="cutBtn" disabled>Cut into Puzzles</button>
+        </div>
+
+        <div class="main-content">
+            <div class="assembly-section">
+                <div class="section-title">Assembly Field</div>
+                <div id="assemblyField"></div>
+            </div>
+
+            <div class="image-section">
+                <div class="section-title">Original Image</div>
+                <div id="originalImage">
+                    <span class="empty-storage-message">Upload an image to start</span>
+                </div>
+                <div class="music-section">
+                    <div class="music-title">🎵 Background Music</div>
+                    <div class="music-group">
+                        <button class="music-btn active" data-music="none">
+                            <span class="music-icon">🔇</span> None
+                        </button>
+                        <button class="music-btn" data-music="calm">
+                            <span class="music-icon">🎹</span> Calm
+                        </button>
+                        <button class="music-btn" data-music="focus">
+                            <span class="music-icon">🎼</span> Focus
+                        </button>
+                        <button class="music-btn" data-music="upbeat">
+                            <span class="music-icon">🎸</span> Upbeat
+                        </button>
+                    </div>
+                    <div class="volume-control">
+                        <label>Vol:</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="storage-section">
+        <div class="section-title">Storage</div>
+        <div id="storage" class="empty-storage-message">Pieces will appear here</div>
+    </div>
+
+    <div class="stats" id="stats" style="display: none;">
+        Placed: <span id="placedCount">0</span>/<span id="totalCount">9</span>
+    </div>
+
+    <div class="timer" id="timer" style="display: none;">
+        Time: <span id="timerValue">00:00</span>
+    </div>
+
+    <div class="record-table" id="recordTable">
+        <h3>Current Record</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mode</th>
+                    <th>Time</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="recordBody">
+                <tr><td colspan="4" class="empty">No record yet</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="leaderboard" id="leaderboard">
+        <h3>Leaders</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mode</th>
+                    <th>Time</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="leadersBody">
+                <tr><td colspan="5" class="empty">No records yet</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="camera-modal" id="cameraModal">
+        <div class="camera-modal-content">
+            <h2 style="color: #4a9eff;">Capture from Camera</h2>
+            <video id="cameraStream" autoplay playsinline></video>
+            <div class="camera-buttons">
+                <button class="camera-btn" id="captureBtn">Capture Photo</button>
+                <button class="camera-btn cancel" id="closeCameraBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="captureCanvas" style="display: none;"></canvas>
+
+    <div id="particles-container"></div>
+
+    <script>
+        const titleElement = document.getElementById('title');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadInput = document.getElementById('uploadInput');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const cameraModal = document.getElementById('cameraModal');
+        const cameraStream = document.getElementById('cameraStream');
+        const captureBtn = document.getElementById('captureBtn');
+        const closeCameraBtn = document.getElementById('closeCameraBtn');
+        const captureCanvas = document.getElementById('captureCanvas');
+        const cutBtn = document.getElementById('cutBtn');
+        const assemblyField = document.getElementById('assemblyField');
+        const originalImage = document.getElementById('originalImage');
+        const storage = document.getElementById('storage');
+        const stats = document.getElementById('stats');
+        const placedCount = document.getElementById('placedCount');
+        const totalCount = document.getElementById('totalCount');
+        const timer = document.getElementById('timer');
+        const timerValue = document.getElementById('timerValue');
+        const leadersBody = document.getElementById('leadersBody');
+        const recordBody = document.getElementById('recordBody');
+
+        let currentImage = null;
+        let puzzlePieces = [];
+        let assembledPieces = new Set();
+        let selectedDifficulty = 3;
+        let totalPieces = 9;
+        let selectedShape = 'square';
+        let mediaStream = null;
+        let draggingPieceId = null;
+        let magnetRange = 80; // pixels - distance within which magnet activates
+        let gameStartedAt = null;
+        let timerIntervalId = null;
+        let firstClickArmed = false;
+
+        const recordsApiUrl = '/api/records';
+
+        function getCurrentModeLabel() {
+            if (selectedShape !== 'square') {
+                return selectedShape;
+            }
+            return `${selectedDifficulty}x${selectedDifficulty}`;
+        }
+
+        function formatDuration(seconds) {
+            const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const sec = String(seconds % 60).padStart(2, '0');
+            return `${min}:${sec}`;
+        }
+
+        function updateTimerLabel() {
+            if (!gameStartedAt) {
+                timerValue.textContent = '00:00';
+                return;
+            }
+            const elapsed = Math.floor((Date.now() - gameStartedAt) / 1000);
+            timerValue.textContent = formatDuration(elapsed);
+        }
+
+        function startTimerOnFirstAction() {
+            if (gameStartedAt) {
+                return;
+            }
+            gameStartedAt = Date.now();
+            updateTimerLabel();
+            timerIntervalId = setInterval(updateTimerLabel, 1000);
+        }
+
+        function resetTimer() {
+            gameStartedAt = null;
+            if (timerIntervalId) {
+                clearInterval(timerIntervalId);
+                timerIntervalId = null;
+            }
+            timerValue.textContent = '00:00';
+        }
+
+        function stopTimerAndGetSeconds() {
+            if (!gameStartedAt) {
+                return 0;
+            }
+            const elapsed = Math.floor((Date.now() - gameStartedAt) / 1000);
+            if (timerIntervalId) {
+                clearInterval(timerIntervalId);
+                timerIntervalId = null;
+            }
+            return elapsed;
+        }
+
+        function armFirstClickTimer() {
+            firstClickArmed = true;
+            const startFromClick = () => {
+                if (!firstClickArmed) {
+                    return;
+                }
+                startTimerOnFirstAction();
+                firstClickArmed = false;
+                storage.removeEventListener('click', startFromClick, true);
+                assemblyField.removeEventListener('click', startFromClick, true);
+            };
+
+            storage.addEventListener('click', startFromClick, true);
+            assemblyField.addEventListener('click', startFromClick, true);
+        }
+
+        async function loadLeaders() {
+            try {
+                const response = await fetch(recordsApiUrl, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('Failed to load records');
+                }
+                const leaders = await response.json();
+                renderLeaders(leaders);
+            } catch (error) {
+                renderLeaders([]);
+            }
+        }
+
+        function renderLeaders(leaders) {
+            if (!Array.isArray(leaders) || leaders.length === 0) {
+                leadersBody.innerHTML = '<tr><td colspan="5" class="empty">No records yet</td></tr>';
+                recordBody.innerHTML = '<tr><td colspan="4" class="empty">No record yet</td></tr>';
+                return;
+            }
+
+            const best = leaders[0];
+            const bestName = String(best.name || 'Player').replace(/[<>]/g, '');
+            const bestMode = String(best.mode || '-').replace(/[<>]/g, '');
+            const bestTime = formatDuration(Number(best.timeSeconds || 0));
+            const bestDate = String(best.date || '-').slice(0, 10);
+            recordBody.innerHTML = `<tr><td>${bestName}</td><td>${bestMode}</td><td>${bestTime}</td><td>${bestDate}</td></tr>`;
+
+            leadersBody.innerHTML = leaders
+                .slice(0, 20)
+                .map((entry, index) => {
+                    const safeName = String(entry.name || 'Player').replace(/[<>]/g, '');
+                    const safeMode = String(entry.mode || '-').replace(/[<>]/g, '');
+                    const safeTime = formatDuration(Number(entry.timeSeconds || 0));
+                    const safeDate = String(entry.date || '-').slice(0, 10);
+                    return `<tr><td>${index + 1}</td><td>${safeName}</td><td>${safeMode}</td><td>${safeTime}</td><td>${safeDate}</td></tr>`;
+                })
+                .join('');
+        }
+
+        async function saveRecord(name, timeSeconds, mode) {
+            const payload = {
+                name,
+                timeSeconds,
+                mode,
+                date: new Date().toISOString()
+            };
+
+            const response = await fetch(recordsApiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save record');
+            }
+
+            const leaders = await response.json();
+            renderLeaders(leaders);
+        }
+
+        // Difficulty selection
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedDifficulty = parseInt(btn.dataset.difficulty);
+                totalPieces = selectedDifficulty * selectedDifficulty;
+            });
+        });
+
+        // Shape selection
+        const shapeBtns = document.querySelectorAll('.shape-btn');
+        shapeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                shapeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedShape = btn.dataset.shape;
+                
+                // Update total pieces based on shape
+                if (selectedShape === 'triangle') {
+                    totalPieces = 9; // 3x3 grid of triangles
+                } else if (selectedShape === 'random') {
+                    totalPieces = 12; // Random polygons
+                } else {
+                    totalPieces = selectedDifficulty * selectedDifficulty;
+                }
+            });
+        });
+
+        // Music selection
+        const musicBtns = document.querySelectorAll('.music-btn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        let currentMusic = null;
+
+        loadLeaders();
+
+        musicBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                musicBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const musicType = btn.dataset.music;
+                playBackgroundMusic(musicType);
+            });
+        });
+
+        volumeSlider.addEventListener('change', (e) => {
+            updateMusicVolume(e.target.value);
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            updateMusicVolume(e.target.value);
+        });
+
+        function playBackgroundMusic(musicType) {
+            stopBackgroundMusic();
+
+            if (musicType === 'none') {
+                currentMusic = null;
+                return;
+            }
+
+            // Start generating music based on type
+            if (musicType === 'calm') {
+                generateCalmMusic();
+            } else if (musicType === 'focus') {
+                generateFocusMusic();
+            } else if (musicType === 'upbeat') {
+                generateUpbeatMusic();
+            }
+        }
+
+        function updateMusicVolume(volume) {
+            initAudioContext();
+            const volumeValue = volume / 100;
+            musicGainNode.gain.value = volumeValue * 0.15; // Scale to reasonable background level
+        }
+
+        // Upload image
+        uploadBtn.addEventListener('click', () => {
+            uploadInput.click();
+        });
+
+        uploadInput.addEventListener('change', (e) => {
+            handleImageUpload(e);
+        });
+
+        // Camera capture via WebRTC
+        cameraBtn.addEventListener('click', () => {
+            openCamera();
+        });
+
+        closeCameraBtn.addEventListener('click', () => {
+            closeCamera();
+        });
+
+        captureBtn.addEventListener('click', () => {
+            capturePhotoFromCamera();
+        });
+
+        async function openCamera() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' },
+                    audio: false
+                });
+                cameraStream.srcObject = mediaStream;
+                cameraModal.classList.add('active');
+            } catch (error) {
+                alert('Unable to access camera. Please check permissions: ' + error.message);
+            }
+        }
+
+        function closeCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            cameraModal.classList.remove('active');
+        }
+
+        function capturePhotoFromCamera() {
+            const context = captureCanvas.getContext('2d');
+            captureCanvas.width = cameraStream.videoWidth;
+            captureCanvas.height = cameraStream.videoHeight;
+            context.drawImage(cameraStream, 0, 0);
+
+            captureCanvas.toBlob((blob) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        currentImage = img;
+                        displayOriginalImage(img);
+                        cutBtn.disabled = false;
+                        closeCamera();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        currentImage = img;
+                        displayOriginalImage(img);
+                        cutBtn.disabled = false;
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function displayOriginalImage(img) {
+            originalImage.innerHTML = '';
+            const imgElement = document.createElement('img');
+            imgElement.src = img.src;
+            originalImage.appendChild(imgElement);
+        }
+
+        // Cut image into puzzle pieces
+        cutBtn.addEventListener('click', () => {
+            if (!currentImage) return;
+
+            puzzlePieces = [];
+            assembledPieces.clear();
+            storage.innerHTML = '';
+            assemblyField.innerHTML = '';
+            titleElement.classList.remove('success');
+            titleElement.textContent = 'Pixel Puzzle';
+            resetTimer();
+            timer.style.display = 'block';
+
+            if (selectedShape === 'square') {
+                cutSquares();
+            } else if (selectedShape === 'triangle') {
+                cutTriangles();
+            } else if (selectedShape === 'random') {
+                cutRandomPolygons();
+            }
+
+            shuffleArray(puzzlePieces);
+            displayPiecesInStorage();
+            createAssemblySlots();
+            totalCount.textContent = String(puzzlePieces.length);
+            stats.style.display = 'block';
+            updateStats();
+            armFirstClickTimer();
+        });
+
+        function cutSquares() {
+            const canvasSize = selectedDifficulty * 100;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(currentImage, 0, 0, canvasSize, canvasSize);
+
+            const pieceWidth = 100;
+            const pieceHeight = 100;
+            const gridSize = selectedDifficulty;
+
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    const x = col * pieceWidth;
+                    const y = row * pieceHeight;
+
+                    const pieceCanvas = document.createElement('canvas');
+                    pieceCanvas.width = pieceWidth;
+                    pieceCanvas.height = pieceHeight;
+                    const pieceCtx = pieceCanvas.getContext('2d');
+                    pieceCtx.drawImage(canvas, x, y, pieceWidth, pieceHeight, 0, 0, pieceWidth, pieceHeight);
+
+                    puzzlePieces.push({
+                        id: row * gridSize + col,
+                        row: row,
+                        col: col,
+                        image: pieceCanvas.toDataURL(),
+                        assembled: false,
+                        shape: 'square',
+                        clipPath: null
+                    });
+                }
+            }
+        }
+
+        function cutTriangles() {
+            const canvasSize = 300;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(currentImage, 0, 0, canvasSize, canvasSize);
+
+            const pieceSize = 100;
+            let pieceId = 0;
+
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    const x = col * pieceSize;
+                    const y = row * pieceSize;
+
+                    // Create two triangles per square
+                    const triangle1 = createTrianglePiece(canvas, x, y, pieceSize, pieceSize, true, pieceId);
+                    const triangle2 = createTrianglePiece(canvas, x, y, pieceSize, pieceSize, false, pieceId + 9);
+
+                    puzzlePieces.push(triangle1);
+                    puzzlePieces.push(triangle2);
+                    pieceId++;
+                }
+            }
+
+            // Keep only unique pieces (remove duplicates)
+            puzzlePieces = puzzlePieces.slice(0, 9);
+        }
+
+        function createTrianglePiece(sourceCanvas, x, y, width, height, isUpper, id) {
+            const pieceCanvas = document.createElement('canvas');
+            pieceCanvas.width = width;
+            pieceCanvas.height = height;
+            const pieceCtx = pieceCanvas.getContext('2d');
+
+            // Draw the source image
+            pieceCtx.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height);
+
+            // Create triangle clip path
+            pieceCtx.save();
+            pieceCtx.beginPath();
+            if (isUpper) {
+                pieceCtx.moveTo(0, 0);
+                pieceCtx.lineTo(width, 0);
+                pieceCtx.lineTo(0, height);
+            } else {
+                pieceCtx.moveTo(width, 0);
+                pieceCtx.lineTo(width, height);
+                pieceCtx.lineTo(0, height);
+            }
+            pieceCtx.closePath();
+            pieceCtx.clip();
+
+            // Redraw image with clipping
+            pieceCtx.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height);
+            pieceCtx.restore();
+
+            const clipPath = isUpper ? 'polygon(0% 0%, 100% 0%, 0% 100%)' : 'polygon(100% 0%, 100% 100%, 0% 100%)';
+
+            return {
+                id: id,
+                row: Math.floor(id / 3),
+                col: id % 3,
+                image: pieceCanvas.toDataURL(),
+                assembled: false,
+                shape: 'triangle',
+                clipPath: clipPath
+            };
+        }
+
+        function cutRandomPolygons() {
+            const canvasSize = 400;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(currentImage, 0, 0, canvasSize, canvasSize);
+
+            const gridSize = 4;
+            const cellSize = canvasSize / gridSize;
+
+            for (let i = 0; i < 12; i++) {
+                const row = Math.floor(Math.random() * gridSize);
+                const col = Math.floor(Math.random() * gridSize);
+                const x = col * cellSize;
+                const y = row * cellSize;
+
+                // Generate random polygon vertices
+                const vertices = generateRandomPolygon(cellSize);
+                const pieceCanvas = createPolygonPiece(canvas, x, y, vertices);
+
+                puzzlePieces.push({
+                    id: i,
+                    row: row,
+                    col: col,
+                    image: pieceCanvas.toDataURL(),
+                    assembled: false,
+                    shape: 'polygon',
+                    vertices: vertices,
+                    clipPath: null
+                });
+            }
+        }
+
+        function generateRandomPolygon(size) {
+            const vertices = [];
+            const sides = 4 + Math.floor(Math.random() * 3); // 4-6 sides
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size * 0.3;
+
+            for (let i = 0; i < sides; i++) {
+                const angle = (i / sides) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+                const r = radius + (Math.random() - 0.5) * radius * 0.3;
+                vertices.push({
+                    x: centerX + Math.cos(angle) * r,
+                    y: centerY + Math.sin(angle) * r
+                });
+            }
+            return vertices;
+        }
+
+        function createPolygonPiece(sourceCanvas, offsetX, offsetY, vertices) {
+            const pieceCanvas = document.createElement('canvas');
+            pieceCanvas.width = 120;
+            pieceCanvas.height = 120;
+            const pieceCtx = pieceCanvas.getContext('2d');
+
+            // Draw the source image
+            pieceCtx.drawImage(sourceCanvas, offsetX, offsetY, 120, 120, 0, 0, 120, 120);
+
+            // Create polygon clip path
+            pieceCtx.save();
+            pieceCtx.beginPath();
+            pieceCtx.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < vertices.length; i++) {
+                pieceCtx.lineTo(vertices[i].x, vertices[i].y);
+            }
+            pieceCtx.closePath();
+            pieceCtx.clip();
+
+            // Redraw image with clipping
+            pieceCtx.drawImage(sourceCanvas, offsetX, offsetY, 120, 120, 0, 0, 120, 120);
+            pieceCtx.restore();
+
+            return pieceCanvas.toDataURL();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function displayPiecesInStorage() {
+            storage.innerHTML = '';
+            puzzlePieces.forEach((piece) => {
+                if (!piece.assembled) {
+                    const pieceElement = createPieceElement(piece);
+                    storage.appendChild(pieceElement);
+                }
+            });
+        }
+
+        function createPieceElement(piece) {
+            const div = document.createElement('div');
+            div.className = 'puzzle-piece';
+            div.draggable = true;
+            div.style.backgroundImage = `url(${piece.image})`;
+            div.style.backgroundSize = '100%';
+            div.style.backgroundPosition = 'center';
+            
+            // Apply clip path for non-square shapes
+            if (piece.clipPath) {
+                div.style.clipPath = piece.clipPath;
+            }
+
+            div.dataset.pieceId = piece.id;
+
+            div.addEventListener('dragstart', (e) => {
+                startTimerOnFirstAction();
+                draggingPieceId = piece.id;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('pieceId', piece.id);
+                div.style.opacity = '0.7';
+            });
+
+            div.addEventListener('dragend', () => {
+                div.style.opacity = '1';
+                draggingPieceId = null;
+                // Reset all magnet highlights
+                document.querySelectorAll('.puzzle-slot.magnet-active').forEach(slot => {
+                    slot.classList.remove('magnet-active');
+                });
+            });
+
+            return div;
+        }
+
+        function createAssemblySlots() {
+            assemblyField.innerHTML = '';
+            
+            // Adjust grid based on shape
+            if (selectedShape === 'triangle') {
+                assemblyField.style.gridTemplateColumns = `repeat(3, 1fr)`;
+            } else if (selectedShape === 'random') {
+                assemblyField.style.gridTemplateColumns = `repeat(4, 1fr)`;
+            } else {
+                assemblyField.style.gridTemplateColumns = `repeat(${selectedDifficulty}, 1fr)`;
+            }
+            
+            for (let i = 0; i < totalPieces; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'puzzle-slot';
+                slot.dataset.slotId = i;
+
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    
+                    // Check if this is the correct slot for the dragging piece
+                    if (draggingPieceId !== null && draggingPieceId === i) {
+                        slot.classList.add('magnet-active');
+                        slot.classList.add('drag-over');
+                    } else {
+                        slot.classList.remove('magnet-active');
+                    }
+                });
+
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                    slot.classList.remove('magnet-active');
+                });
+
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    slot.classList.remove('magnet-active');
+                    handleDrop(slot, i);
+                });
+
+                assemblyField.appendChild(slot);
+            }
+        }
+
+        function handleDrop(slot, slotId) {
+            const pieceId = parseInt(event.dataTransfer.getData('pieceId'));
+            const piece = puzzlePieces.find(p => p.id === pieceId);
+
+            if (!piece) return;
+
+            // Check if piece matches the slot
+            if (piece.id === slotId) {
+                // Correct placement
+                piece.assembled = true;
+                assembledPieces.add(pieceId);
+
+                // Play magnet sound
+                playMagnetSound();
+
+                // Create the assembled piece element
+                const pieceElement = createPieceElement(piece);
+                pieceElement.dataset.assembled = 'true';
+                pieceElement.classList.add('magnet-snap');
+                slot.innerHTML = '';
+                slot.appendChild(pieceElement);
+                slot.style.borderColor = '#4ade80';
+                slot.style.borderStyle = 'solid';
+                slot.classList.add('magnet-active');
+                
+                // Flash the magnet active state
+                setTimeout(() => {
+                    slot.classList.remove('magnet-active');
+                }, 300);
+
+                // Remove from storage
+                displayPiecesInStorage();
+
+                // Check if puzzle is complete
+                updateStats();
+                if (assembledPieces.size === puzzlePieces.length) {
+                    showSuccess();
+                }
+            } else {
+                // Wrong placement - show feedback
+                slot.classList.add('drag-over');
+                setTimeout(() => {
+                    slot.classList.remove('drag-over');
+                }, 200);
+            }
+        }
+
+        function updateStats() {
+            placedCount.textContent = assembledPieces.size;
+        }
+
+        async function showSuccess() {
+            const timeSeconds = stopTimerAndGetSeconds();
+            titleElement.textContent = 'Success!';
+            titleElement.classList.add('success');
+            
+            // Celebration effect
+            titleElement.style.animation = 'pulse 0.5s ease-in-out 3';
+            
+            // Trigger particle explosion
+            createParticleExplosion();
+
+            const defaultName = 'Player';
+            const userName = prompt('Enter your name for the leaderboard:', defaultName);
+            const finalName = (userName && userName.trim()) ? userName.trim() : defaultName;
+
+            try {
+                await saveRecord(finalName, timeSeconds, getCurrentModeLabel());
+            } catch (error) {
+                console.error(error);
+                alert('Could not save record. Start via local server to enable JSON save.');
+            }
+        }
+
+        function createParticleExplosion() {
+            const container = document.getElementById('particles-container');
+            const numParticles = 50;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random color - use vibrant colors
+                const colors = ['#4ade80', '#4a9eff', '#fbbf24', '#f87171', '#a78bfa', '#06b6d4'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                particle.style.borderRadius = '50%';
+                
+                // Starting position (center)
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                
+                // Random angle and distance
+                const angle = (Math.random() * Math.PI * 2);
+                const distance = Math.random() * 300 + 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                // Random base rotation variation
+                const baseRotation = Math.random() * 360;
+                particle.style.transform = `rotate(${baseRotation}deg)`;
+                
+                container.appendChild(particle);
+                
+                // Trigger animation
+                particle.offsetHeight; // Force reflow
+                particle.classList.add('active');
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1500);
+            }
+        }
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Sound effect for magnet snap
+        function playMagnetSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const now = audioContext.currentTime;
+            
+            // Create a simple beep sound
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+            
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            
+            osc.start(now);
+            osc.stop(now + 0.1);
+        }
+
+        // Background music generators
+        let audioContext = null;
+        let musicGainNode = null;
+        let musicOscillators = [];
+        let isMusicPlaying = false;
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                musicGainNode = audioContext.createGain();
+                musicGainNode.connect(audioContext.destination);
+                musicGainNode.gain.value = 0.1; // Quiet background music
+            }
+        }
+
+        function stopBackgroundMusic() {
+            if (isMusicPlaying) {
+                musicOscillators.forEach(osc => {
+                    try {
+                        osc.stop();
+                    } catch (e) {}
+                });
+                musicOscillators = [];
+                isMusicPlaying = false;
+            }
+        }
+
+        function generateCalmMusic() {
+            initAudioContext();
+            stopBackgroundMusic();
+
+            const now = audioContext.currentTime;
+            const notes = [261.63, 293.66, 329.63, 349.23]; // C, D, E, F
+            let noteIndex = 0;
+
+            function playNote() {
+                if (!isMusicPlaying) return;
+
+                const osc = audioContext.createOscillator();
+                const env = audioContext.createGain();
+
+                osc.connect(env);
+                env.connect(musicGainNode);
+
+                const frequency = notes[noteIndex % notes.length];
+                osc.frequency.value = frequency;
+                osc.type = 'sine';
+
+                env.gain.setValueAtTime(0.1, audioContext.currentTime);
+                env.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+
+                osc.start(audioContext.currentTime);
+                osc.stop(audioContext.currentTime + 1);
+
+                musicOscillators.push(osc);
+                noteIndex++;
+
+                setTimeout(playNote, 1000);
+            }
+
+            isMusicPlaying = true;
+            playNote();
+        }
+
+        function generateFocusMusic() {
+            initAudioContext();
+            stopBackgroundMusic();
+
+            const now = audioContext.currentTime;
+            const notes = [440, 495, 523.25, 587.33]; // A, B, C, D
+
+            function playNote() {
+                if (!isMusicPlaying) return;
+
+                for (let i = 0; i < 2; i++) {
+                    const osc = audioContext.createOscillator();
+                    const env = audioContext.createGain();
+
+                    osc.connect(env);
+                    env.connect(musicGainNode);
+
+                    const frequency = notes[(i * 2) % notes.length];
+                    osc.frequency.value = frequency;
+                    osc.type = 'triangle';
+
+                    env.gain.setValueAtTime(0.08, audioContext.currentTime);
+                    env.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+
+                    osc.start(audioContext.currentTime);
+                    osc.stop(audioContext.currentTime + 0.8);
+
+                    musicOscillators.push(osc);
+                }
+
+                setTimeout(playNote, 800);
+            }
+
+            isMusicPlaying = true;
+            playNote();
+        }
+
+        function generateUpbeatMusic() {
+            initAudioContext();
+            stopBackgroundMusic();
+
+            const notes = [523.25, 587.33, 659.25, 783.99]; // C, D, E, G
+
+            function playNote() {
+                if (!isMusicPlaying) return;
+
+                const osc = audioContext.createOscillator();
+                const env = audioContext.createGain();
+
+                osc.connect(env);
+                env.connect(musicGainNode);
+
+                const frequency = notes[Math.floor(Math.random() * notes.length)];
+                osc.frequency.value = frequency;
+                osc.type = 'square';
+
+                env.gain.setValueAtTime(0.12, audioContext.currentTime);
+                env.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+
+                osc.start(audioContext.currentTime);
+                osc.stop(audioContext.currentTime + 0.6);
+
+                musicOscillators.push(osc);
+
+                setTimeout(playNote, 600);
+            }
+
+            isMusicPlaying = true;
+            playNote();
+        }
+    </script>
+</body>
+</html>
